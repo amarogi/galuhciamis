@@ -40,11 +40,15 @@
     <div id="intro-modal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
         <div class="bg-gray-800 rounded-lg shadow-xl p-8 max-w-lg w-full text-center">
             <h2 class="text-3xl font-extrabold text-white mb-2">GALUH CIAMIS</h2>
-            <p class="text-lg text-blue-300 mb-6">Game Aksara Lokal Ungkap Histori – Ciamis</p>
+            <p class="text-lg text-blue-300 mb-1">Game Aksara Lokal Ungkap Histori – Ciamis</p>
+            <p class="text-xs text-gray-500 mb-6">by marogi</p>
+            <p class="text-sm text-gray-400 mb-6 italic">Uji wawasanmu tentang Ciamis dalam game pencarian kata yang seru dan menantang ini!</p>
+            
             <div class="text-left text-gray-300 space-y-3 mb-8">
                 <p><span class="font-bold text-yellow-400">Panduan:</span> Pilih kategori dan waktu, lalu cari 3 kata tersembunyi. Setelah berhasil, Anda naik level dan bisa memilih tantangan baru.</p>
                 <p><span class="font-bold text-red-400">Disklaimer:</span> Game ini adalah sarana edukasi dan hiburan. Data dalam game disederhanakan. Untuk informasi historis yang akurat, rujuklah sumber tepercaya.</p>
             </div>
+
             <button id="continue-to-name-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition text-lg">Mengerti & Lanjutkan</button>
         </div>
     </div>
@@ -57,33 +61,13 @@
             <input type="text" id="player-name-input" placeholder="Nama Pemain..." maxlength="15" class="w-full bg-gray-700 border border-gray-600 rounded p-3 text-center text-lg mb-6">
             <div class="grid grid-cols-2 gap-4">
                 <button id="exit-name-btn" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg transition">Keluar</button>
-                <button id="continue-to-mode-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition">Lanjut</button>
+                <button id="continue-to-setup-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition">Lanjut</button>
             </div>
-        </div>
-    </div>
-    
-    <!-- Mode Selection Modal -->
-    <div id="mode-selection-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-30 p-4">
-        <div class="bg-gray-800 rounded-lg shadow-xl p-8 max-w-md w-full text-center">
-            <h2 class="text-2xl font-bold text-white mb-6">Pilih Mode Permainan</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <button id="solo-mode-btn" class="bg-blue-600 hover:bg-blue-700 p-6 rounded-lg transition transform hover:scale-105">
-                    <span class="text-5xl">👤</span>
-                    <span class="block mt-2 font-bold text-lg">Main Sendiri</span>
-                    <span class="text-xs text-blue-200">Mode Waktu</span>
-                </button>
-                <button id="battle-mode-btn" class="bg-purple-600 hover:bg-purple-700 p-6 rounded-lg transition transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                     <span class="text-5xl">⚔️</span>
-                    <span class="block mt-2 font-bold text-lg">Tantang Pemain</span>
-                     <span class="text-xs text-purple-200">Segera Hadir</span>
-                </button>
-            </div>
-             <button id="exit-mode-btn" class="mt-8 bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">Kembali</button>
         </div>
     </div>
 
     <!-- Setup Modal for Solo Mode -->
-    <div id="setup-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-20 p-4">
+    <div id="setup-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-30 p-4">
          <div class="bg-gray-800 rounded-lg shadow-xl p-8 max-w-lg w-full">
             <h2 class="text-2xl font-bold text-center mb-6">Pengaturan Level</h2>
             <div class="mb-6">
@@ -133,6 +117,7 @@
             <header class="text-center mb-4">
                 <h1 class="text-3xl font-bold">GALUH CIAMIS</h1>
                 <p class="text-sm text-gray-400">Game Aksara Lokal Ungkap Histori – Ciamis</p>
+                <p class="text-xs text-gray-500 mt-1">by marogi</p>
                 <p id="category-title-display" class="text-lg text-blue-400 font-semibold mt-2"></p>
             </header>
             <div id="word-grid" class="mx-auto" style="max-width: 500px;"></div>
@@ -174,7 +159,6 @@
             introModal: document.getElementById('intro-modal'),
             playerNameModal: document.getElementById('player-name-modal'),
             setupModal: document.getElementById('setup-modal'),
-            modeSelectionModal: document.getElementById('mode-selection-modal'),
             continueToNameBtn: document.getElementById('continue-to-name-btn'),
             continueToSetupBtn: document.getElementById('continue-to-setup-btn'),
             categoryTitleDisplay: document.getElementById('category-title-display'),
@@ -186,9 +170,6 @@
             startGameBtn: document.getElementById('start-game-btn'),
             exitSetupBtn: document.getElementById('exit-setup-btn'),
             exitNameBtn: document.getElementById('exit-name-btn'),
-            exitModeBtn: document.getElementById('exit-mode-btn'),
-            soloModeBtn: document.getElementById('solo-mode-btn'),
-            battleModeBtn: document.getElementById('battle-mode-btn'),
             categoryDropdown: document.getElementById('category-dropdown'),
             timeSelector: document.getElementById('time-selector'),
             levelDisplay: document.getElementById('level-display'),
@@ -201,4 +182,546 @@
             "Makanan Khas": [ {id:"GALENDO",en:"Coconut fudge"}, {id:"LEUMEUNG",en:"Bamboo rice"}, {id:"OPAK",en:"Cassava cracker"}, {id:"SALE PISANG",en:"Banana snack"}, {id:"RENGGINANG",en:"Rice cracker"}, {id:"NOGA",en:"Nougat candy"}, {id:"DENDENG",en:"Sweet jerky"}, {id:"SATE MARANGGI",en:"A type of satay"}, {id:"MIE GOLOSOR",en:"Slippery noodle"}, {id:"KERIPIK SUKUN",en:"Breadfruit chips"} ],
             "Tokoh / Sejarah": [ {id:"PANAEKAN",en:"Historic figure"}, {id:"KUSUMADINATA",en:"Regent's name"}, {id:"SASTRAWINATA",en:"Historic figure"}, {id:"HERDIAT",en:"Current regent"}, {id:"KOMARA",en:"Historic figure"}, {id:"ADIPATI",en:"A noble title"}, {id:"IMBANAGARA",en:"Historic name"}, {id:"BOROSNGORA",en:"A historic scholar"}, {id:"JAYANEGARA",en:"A king's name"}, {id:"GALUH",en:"Ancient kingdom"} ],
             "Tradisi dan Budaya": [ {id:"NYANGKU",en:"A ceremony"}, {id:"MAPAG",en:"A welcoming ritual"}, {id:"NGIKIS",en:"A ritual"}, {id:"RUWATAN",en:"Purification ritual"}, {id:"MULUDAN",en:"Mawlid celebration"}, {id:"NGALUNGSUR",en:"A ritual"}, {id:"SEDEKAH",en:"Alms giving"}, {id:"SUKMA",en:"The soul/spirit"}, {id:"LEMBUR",en:"Hometown/village"}, {id:"WEKASAN",en:"The end/final"} ],
-            "Produk Lokal": [ {id:"GALENDO",en:"Coconut fudge"}
+            "Produk Lokal": [ {id:"GALENDO",en:"Coconut fudge"}, {id:"SALE PISANG",en:"Banana snack"}, {id:"DENDENG SAPI",en:"Beef jerky"}, {id:"KERIPIK TEMPE",en:"Tempeh chips"}, {id:"OPAK SINGKONG",en:"Cassava crackers"}, {id:"LEUMEUNG",en:"Bamboo rice"}, {id:"NOGA KACANG",en:"Peanut nougat"}, {id:"RENGGINANG",en:"Rice crackers"}, {id:"BATIK CIAMISAN",en:"Local batik style"}, {id:"ANYAMAN BAMBU",en:"Bamboo weaving"} ],
+            "Alam & Flora-Fauna": [ {id:"GUNUNG SAWAL",en:"A mountain"}, {id:"CURUG CIBOLANG",en:"A waterfall"}, {id:"SITU LENGKONG",en:"A lake"}, {id:"HUTAN PANJALU",en:"A forest"}, {id:"KANCRA",en:"A type of fish"}, {id:"LUTUNG",en:"A primate"}, {id:"KUPU CIAMIS",en:"A butterfly"}, {id:"JAMBU BOL",en:"A fruit"}, {id:"PADI GALUH",en:"A rice variant"}, {id:"LEUWEUNG",en:"Forest"} ],
+            "Instansi": [ {id:"DINAS PENDIDIKAN",en:"Education office"}, {id:"RSUD CIAMIS",en:"Regional hospital"}, {id:"POLRES CIAMIS",en:"Local police dept."}, {id:"BAPPEDA",en:"Planning agency"}, {id:"DISDUKCAPIL",en:"Civil registry"}, {id:"KPU CIAMIS",en:"Election commission"}, {id:"KECAMATAN",en:"Sub-district office"}, {id:"BPBD CIAMIS",en:"Disaster agency"}, {id:"KODIM",en:"Military command"}, {id:"DINAS KESEHATAN",en:"Health office"} ],
+            "Cerita Rakyat": [ {id:"CIUNG WANARA",en:"A folklore hero"}, {id:"PRABU GALUH",en:"A king"}, {id:"BOROSNGORA",en:"A scholar figure"}, {id:"PANCALIKAN",en:"A sacred stone"}, {id:"MAKAM EYANG",en:"Ancestor's tomb"}, {id:"LEGENDA SITU",en:"Lake legend"}, {id:"NYI MAS RATU",en:"A queen's name"}, {id:"JAKA TOLE",en:"A folklore hero"}, {id:"RATU GALUH",en:"A queen"}, {id:"KERIS SAKTI",en:"Magic kris"} ],
+            "Sumber Air & Curug": [ {id:"CIBOLANG",en:"A waterfall"}, {id:"PANGANTEN",en:"A waterfall"}, {id:"SALOSIN",en:"A waterfall"}, {id:"CURUG TUJUH",en:"Seven waterfalls"}, {id:"CIMARINJUNG",en:"A waterfall"}, {id:"SITU MUSTIKA",en:"A lake"}, {id:"SAWER",en:"A waterfall"}, {id:"CIKASO KECIL",en:"A waterfall"}, {id:"MATA AIR",en:"A water spring"}, {id:"BATU KARUT",en:"A lake name"} ],
+            "Julukan/Slogan": [ {id:"CIAMIS MANIS",en:"Sweet Ciamis"}, {id:"TATAR GALUH",en:"Land of Galuh"}, {id:"BUMI GALENDO",en:"Land of Galendo"}, {id:"CIAMIS CERDAS",en:"Smart Ciamis"}, {id:"GALUH TANGGUH",en:"Tough Galuh"}, {id:"BUMI PASUNDAN",en:"Land of Sunda"}, {id:"CIAMIS UNGGUL",en:"Excellent Ciamis"}, {id:"SERIBU CURUG",en:"Thousand waterfalls"}, {id:"KOTA SANTRI",en:"City of students"}, {id:"CIAMIS MANDIRI",en:"Independent Ciamis"} ],
+            "Ruang Publik": [ {id:"ALUN-ALUN",en:"City square"}, {id:"LOKASANA",en:"A public field"}, {id:"TAMAN RAFLESIA",en:"A park"}, {id:"ALUN KAWALI",en:"Kawali square"}, {id:"SURAWISESA",en:"A park"}, {id:"TAMAN CURUG",en:"Waterfall park"}, {id:"TAMAN GALUH",en:"Galuh park"}, {id:"BAREGBEG",en:"A public field"}, {id:"MAKAM PAHLAWAN",en:"Heroes cemetery"}, {id:"PUSDIKLAT",en:"Training center"} ]
+        };
+        
+        const gridSize = 12;
+        let gameState = {};
+        let db, auth, userId, timerInterval, leaderboardUnsubscribe;
+        let isSelecting = false;
+        let selection = [];
+        let grid = [];
+
+        const sounds = {
+            correct: new Tone.Synth({ oscillator: { type: 'triangle' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 0.5 } }).toDestination(),
+            wrong: new Tone.Synth({ oscillator: { type: 'square' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.1 } }).toDestination(),
+            win: new Tone.PolySynth(Tone.Synth).toDestination(),
+            lose: new Tone.Synth({ oscillator: { type: 'sawtooth' }, envelope: { attack: 0.1, decay: 0.5, sustain: 0.2, release: 0.5 } }).toDestination()
+        };
+        
+        function playSound(type) {
+            if (Tone.context.state !== 'running') { Tone.start(); }
+            switch(type) {
+                case 'correct': sounds.correct.triggerAttackRelease("G5", "16n"); break;
+                case 'wrong': sounds.wrong.triggerAttackRelease("C3", "8n"); break;
+                case 'win': sounds.win.triggerAttackRelease(["C4", "E4", "G4", "C5"], "8n", Tone.now() + 0.1); break;
+                case 'lose': sounds.lose.triggerAttackRelease("A2", "2n"); break;
+            }
+        }
+        
+        async function initFirebase() {
+             const appId = typeof __app_id !== 'undefined' ? __app_id : 'galuh-ciamis-game';
+            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+            if (!firebaseConfig) { console.error("Firebase config not found!"); return; }
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            onAuthStateChanged(auth, user => { if (user) { userId = user.uid; } });
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else { await signInAnonymously(auth); }
+            } catch (error) { console.error("Auth Error:", error); }
+        }
+
+        async function saveScore(score) {
+            if (!db || !userId || !gameState.selectedCategory) return;
+            const playerName = gameState.playerName || "Anonim";
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'galuh-ciamis-game';
+            const scoresCollectionRef = collection(db, `artifacts/${appId}/public/data/scores`);
+            try {
+                await addDoc(scoresCollectionRef, {
+                    name: playerName,
+                    userId: userId,
+                    category: gameState.selectedCategory,
+                    score: score,
+                    timestamp: serverTimestamp()
+                });
+            } catch (error) {
+                console.error("Error saving score:", error);
+            }
+        }
+
+        function setupLeaderboardListener(category, filter = 'all') {
+            if (leaderboardUnsubscribe) leaderboardUnsubscribe();
+            if (!db || !category) return;
+
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'galuh-ciamis-game';
+            const scoresCollectionRef = collection(db, `artifacts/${appId}/public/data/scores`);
+            
+            let date = new Date();
+            let startDate;
+            switch(filter) {
+                case 'daily':
+                    date.setHours(0, 0, 0, 0);
+                    startDate = date;
+                    break;
+                case 'weekly':
+                    date.setDate(date.getDate() - date.getDay());
+                    date.setHours(0, 0, 0, 0);
+                    startDate = date;
+                    break;
+                case 'monthly':
+                    date.setDate(1);
+                    date.setHours(0, 0, 0, 0);
+                    startDate = date;
+                    break;
+                default: 
+                    startDate = new Date(0); 
+            }
+            
+            const q = query(scoresCollectionRef, where("category", "==", category));
+            
+            leaderboardUnsubscribe = onSnapshot(q, (snapshot) => {
+                const playerScores = new Map();
+
+                const filteredDocs = snapshot.docs.filter(doc => {
+                    const data = doc.data();
+                    if (!data.timestamp) return false;
+                    return data.timestamp.toDate() >= startDate;
+                });
+
+                filteredDocs.forEach(doc => {
+                    const data = doc.data();
+                    const currentTopScore = playerScores.get(data.userId)?.score || 0;
+                    if (data.score > currentTopScore) {
+                        playerScores.set(data.userId, { name: data.name, score: data.score });
+                    }
+                });
+
+                const sortedPlayers = Array.from(playerScores.values()).sort((a, b) => b.score - a.score);
+                
+                elements.leaderboard.innerHTML = '';
+                if (sortedPlayers.length === 0) {
+                    elements.leaderboard.innerHTML = '<p class="text-gray-500 text-center">Belum ada skor.</p>';
+                } else {
+                    sortedPlayers.slice(0, 10).forEach((player, index) => {
+                        const item = document.createElement('div');
+                        item.className = 'flex justify-between p-2 rounded-md bg-gray-700';
+                        item.innerHTML = `<span class="leaderboard-name">${index + 1}. ${player.name}</span> <span class="leaderboard-score">${player.score}</span>`;
+                        elements.leaderboard.appendChild(item);
+                    });
+                }
+            }, (error) => {
+                console.error("Leaderboard listener error: ", error);
+            });
+        }
+
+        function triggerZap() {
+            const zap = document.createElement('div');
+            zap.className = 'zap-flash';
+            elements.zapOverlay.appendChild(zap);
+            zap.addEventListener('animationend', () => zap.remove());
+            playSound('wrong');
+        }
+
+        function triggerCelebration() {
+            for (let i = 0; i < 60; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.animationDelay = `${Math.random() * 2}s`;
+                const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800'];
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                elements.confettiContainer.appendChild(confetti);
+            }
+            playSound('win');
+            setTimeout(() => elements.confettiContainer.innerHTML = '', 3000);
+        }
+
+        function placeWords(wordsToPlace) {
+             grid = Array(gridSize).fill(null).map(() => Array(gridSize).fill(''));
+             let placedWordsData = [];
+
+            for (const wordObj of wordsToPlace) {
+                 const word = wordObj.id.replace(/ /g, "").toUpperCase();
+                 let placed = false;
+                 for (let i = 0; i < 100 && !placed; i++) {
+                    const dir = Math.floor(Math.random() * 2); 
+                    const r = Math.floor(Math.random() * gridSize);
+                    const c = Math.floor(Math.random() * gridSize);
+                    
+                    let cellCoords = [];
+
+                    if (dir === 0 && c + word.length <= gridSize) { // Horizontal
+                        let canPlace = true;
+                        for (let j = 0; j < word.length; j++) if (grid[r][c+j] !== '') { canPlace = false; break; }
+                        if (canPlace) {
+                            for (let j = 0; j < word.length; j++) {
+                                grid[r][c+j] = word[j];
+                                cellCoords.push({ r, c: c + j });
+                            }
+                            placedWordsData.push({ wordObj, cells: cellCoords });
+                            placed = true;
+                        }
+                    } else if (dir === 1 && r + word.length <= gridSize) { // Vertical
+                         let canPlace = true;
+                        for (let j = 0; j < word.length; j++) if (grid[r+j][c] !== '') { canPlace = false; break; }
+                        if (canPlace) {
+                            for (let j = 0; j < word.length; j++) {
+                                grid[r+j][c] = word[j];
+                                cellCoords.push({ r: r + j, c });
+                            }
+                            placedWordsData.push({ wordObj, cells: cellCoords });
+                            placed = true;
+                        }
+                    }
+                 }
+            }
+            return placedWordsData;
+        }
+        
+        function fillGrid() {
+            const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            for (let r = 0; r < gridSize; r++) {
+                for (let c = 0; c < gridSize; c++) {
+                    if (grid[r][c] === '') {
+                        grid[r][c] = alphabet[Math.floor(Math.random() * alphabet.length)];
+                    }
+                }
+            }
+        }
+        
+        function renderGrid() {
+            elements.grid.innerHTML = '';
+            for (let r = 0; r < gridSize; r++) {
+                for (let c = 0; c < gridSize; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'grid-cell';
+                    cell.dataset.row = r;
+                    cell.dataset.col = c;
+                    cell.textContent = grid[r][c];
+                    elements.grid.appendChild(cell);
+                }
+            }
+        }
+        
+        function renderWordList(wordsToRender) {
+            elements.wordList.innerHTML = '';
+            wordsToRender.forEach(wordObj => {
+                const li = document.createElement('li');
+                li.id = `word-${wordObj.id.replace(/ /g, "")}`;
+                li.innerHTML = `${wordObj.id} <span class="text-xs text-gray-500 block">(${wordObj.en})</span>`;
+                elements.wordList.appendChild(li);
+            });
+        }
+
+        function populateCategoryDropdown() {
+            const dropdown = elements.categoryDropdown;
+            Object.keys(wordDatabase).forEach(categoryName => {
+                const option = document.createElement('option');
+                option.value = categoryName;
+                option.textContent = categoryName;
+                dropdown.appendChild(option);
+            });
+        }
+
+        function setupRound() {
+            elements.categoryTitleDisplay.textContent = `Kategori: ${gameState.selectedCategory}`;
+            elements.feedback.textContent = '';
+            gameState.foundWords = [];
+            
+            let availableWords = wordDatabase[gameState.selectedCategory].filter(w => !gameState.usedWords.includes(w.id));
+            if(availableWords.length < 3) { 
+                gameState.usedWords = [];
+                availableWords = wordDatabase[gameState.selectedCategory];
+            }
+
+            gameState.wordsForRound = [];
+            for (let i = 0; i < 3; i++) {
+                if (availableWords.length === 0) break;
+                const randomIndex = Math.floor(Math.random() * availableWords.length);
+                const word = availableWords.splice(randomIndex, 1)[0];
+                gameState.wordsForRound.push(word);
+                gameState.usedWords.push(word.id);
+            }
+            
+            const placedWords = placeWords(gameState.wordsForRound);
+            gameState.wordsForRoundData = placedWords;
+            if (placedWords.length < 3) {
+                 setTimeout(setupRound, 100); 
+                 return;
+            }
+            fillGrid();
+            renderGrid();
+            renderWordList(placedWords.map(d => d.wordObj));
+        }
+        
+        function startTimer(duration) {
+            let timer = duration;
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                let minutes = parseInt(timer / 60, 10).toString().padStart(2, '0');
+                let seconds = parseInt(timer % 60, 10).toString().padStart(2, '0');
+                elements.timer.textContent = `${minutes}:${seconds}`;
+                if (--timer < 0) {
+                    clearInterval(timerInterval);
+                    endGame(false);
+                }
+            }, 1000);
+        }
+
+        function endGame(isWin) {
+            clearInterval(timerInterval);
+            gameState.isGameOver = true;
+            elements.actionButtons.innerHTML = ''; 
+
+            if (isWin) {
+                triggerCelebration();
+                const timeParts = elements.timer.textContent.split(':');
+                const remainingTime = parseInt(timeParts[0]) * 60 + parseInt(timeParts[1]);
+                const score = Math.floor(100 + (remainingTime * gameState.timeMultiplier));
+                elements.levelDisplay.textContent = gameState.level;
+                elements.feedback.textContent = `LEVEL SELESAI! Skor: ${score}`;
+                elements.feedback.classList.add('text-green-400');
+                saveScore(score);
+                
+                const continueBtn = document.createElement('button');
+                continueBtn.textContent = 'Lanjut Level Berikutnya';
+                continueBtn.className = 'w-full bg-green-600 hover:bg-green-700 font-bold py-2 px-4 rounded-lg';
+                continueBtn.onclick = () => elements.setupModal.classList.remove('hidden');
+                
+                const exitBtn = document.createElement('button');
+                exitBtn.textContent = 'Keluar';
+                exitBtn.className = 'w-full bg-gray-600 hover:bg-gray-700 font-bold py-2 px-4 rounded-lg';
+                exitBtn.onclick = exitToMainMenu;
+
+                elements.actionButtons.appendChild(continueBtn);
+                elements.actionButtons.appendChild(exitBtn);
+
+            } else {
+                playSound('lose');
+                const score = gameState.foundWords.length * 20;
+                saveScore(score);
+                elements.feedback.textContent = 'Waktu Habis! Jawaban benar ditandai.';
+                elements.feedback.classList.add('text-red-500');
+                
+                const retryBtn = document.createElement('button');
+                retryBtn.textContent = 'Coba Lagi';
+                retryBtn.className = 'w-full bg-blue-600 hover:bg-blue-700 font-bold py-2 px-4 rounded-lg';
+                retryBtn.onclick = () => elements.setupModal.classList.remove('hidden');
+
+                const exitBtn = document.createElement('button');
+                exitBtn.textContent = 'Keluar';
+                exitBtn.className = 'w-full bg-gray-600 hover:bg-gray-700 font-bold py-2 px-4 rounded-lg';
+                exitBtn.onclick = exitToMainMenu;
+
+                elements.actionButtons.appendChild(retryBtn);
+                elements.actionButtons.appendChild(exitBtn);
+
+                gameState.wordsForRoundData.forEach(wordData => {
+                    if (!gameState.foundWords.includes(wordData.wordObj.id)) {
+                        wordData.cells.forEach(cellPos => {
+                            const cellEl = document.querySelector(`[data-row='${cellPos.r}'][data-col='${cellPos.c}']`);
+                            if (cellEl) cellEl.classList.add('missed');
+                        });
+                    }
+                });
+            }
+        }
+        
+        function markAsFound(wordId, cells) {
+            cells.forEach(cell => {
+                cell.classList.add('found');
+                cell.addEventListener('animationend', () => cell.classList.remove('pop-correct'), { once: true });
+            });
+            const wordLi = document.getElementById(`word-${wordId.replace(/ /g, "")}`);
+            if (wordLi) wordLi.classList.add('found');
+        }
+        
+        function checkWord(word) {
+            const reversedWord = word.split('').reverse().join('');
+            const wordExists = gameState.wordsForRoundData.find(w => w.wordObj.id.replace(/ /g,"") === word);
+            const reversedWordExists = gameState.wordsForRoundData.find(w => w.wordObj.id.replace(/ /g,"") === reversedWord);
+            
+            let foundWordObj = null;
+            if (wordExists && !gameState.foundWords.includes(wordExists.wordObj.id)) foundWordObj = wordExists.wordObj;
+            else if (reversedWordExists && !gameState.foundWords.includes(reversedWordExists.wordObj.id)) foundWordObj = reversedWordExists.wordObj;
+
+            if (foundWordObj) {
+                gameState.foundWords.push(foundWordObj.id);
+                playSound('correct');
+                markAsFound(foundWordObj.id, selection);
+                if (gameState.foundWords.length === gameState.wordsForRoundData.length) {
+                    endGame(true);
+                }
+                return true;
+            }
+            return false;
+        }
+
+        function handleSelectionEnd() {
+            if (!isSelecting || gameState.isGameOver) return;
+            isSelecting = false;
+            let selectedWord = selection.map(cell => cell.textContent).join('');
+            const found = checkWord(selectedWord);
+            if (!found) {
+                triggerZap();
+                selection.forEach(cell => {
+                    cell.classList.add('wrong');
+                    cell.addEventListener('animationend', () => cell.classList.remove('wrong'), { once: true });
+                });
+            }
+            document.querySelectorAll('.grid-cell.selecting').forEach(c => c.classList.remove('selecting'));
+            selection = [];
+        }
+
+        function setupSelectionHandlers() {
+            const start = (e) => {
+                if (gameState.isGameOver) return;
+                e.preventDefault();
+                const cell = e.target.closest('.grid-cell');
+                if (!cell) return;
+                isSelecting = true;
+                selection = [cell];
+                cell.classList.add('selecting');
+            };
+            const move = (e) => {
+                if (!isSelecting || gameState.isGameOver) return;
+                e.preventDefault();
+                const target = e.type === 'touchmove' ? document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY) : e.target;
+                const cell = target.closest('.grid-cell');
+                if (cell && !selection.includes(cell)) {
+                    selection.push(cell);
+                    cell.classList.add('selecting');
+                }
+            };
+            elements.grid.addEventListener('mousedown', start);
+            elements.grid.addEventListener('mousemove', move);
+            elements.grid.addEventListener('touchstart', start, { passive: false });
+            elements.grid.addEventListener('touchmove', move, { passive: false });
+        }
+        
+        function checkStartButton() {
+            const catSelected = elements.categoryDropdown.value;
+            const timeSelected = document.querySelector('.time-btn.border-yellow-400');
+            elements.startGameBtn.disabled = !(catSelected && timeSelected);
+        }
+
+        function startGame() {
+            const currentLevel = gameState.level || 0;
+            const currentPlayerName = gameState.playerName;
+            
+            gameState = {
+                level: currentLevel + 1,
+                playerName: currentPlayerName,
+                selectedCategory: null,
+                selectedTime: 120,
+                timeMultiplier: 1.5,
+                wordsForRound: [],
+                wordsForRoundData: [],
+                foundWords: [],
+                usedWords: gameState.usedWords || [],
+                isGameOver: false
+            };
+            elements.levelDisplay.textContent = gameState.level;
+            
+            gameState.selectedCategory = elements.categoryDropdown.value;
+            const selectedTimeBtn = document.querySelector('.time-btn.border-yellow-400');
+            
+            if (!gameState.selectedCategory || !selectedTimeBtn) return;
+
+            gameState.selectedTime = parseInt(selectedTimeBtn.dataset.time);
+            gameState.timeMultiplier = parseFloat(selectedTimeBtn.dataset.multiplier);
+            
+            elements.setupModal.classList.add('hidden');
+            
+            elements.actionButtons.innerHTML = `<button id="exit-game-btn" class="w-full bg-red-600 hover:bg-red-700 font-bold py-2 px-4 rounded-lg">Keluar dari Game</button>`;
+            document.getElementById('exit-game-btn').addEventListener('click', exitToMainMenu);
+
+            setupLeaderboardListener(gameState.selectedCategory);
+            startTimer(gameState.selectedTime);
+            setupRound();
+        }
+        
+        function exitToMainMenu() {
+            clearInterval(timerInterval);
+            if(gameState) gameState.isGameOver = true;
+            elements.introModal.classList.remove('hidden');
+            elements.setupModal.classList.add('hidden');
+            elements.playerNameModal.classList.add('hidden');
+        }
+
+        // --- Initial Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            populateCategoryDropdown();
+            setupSelectionHandlers();
+            initFirebase();
+            
+            const savedPlayerName = localStorage.getItem('galuhCiamisPlayerName');
+            if (savedPlayerName) {
+                elements.playerNameInput.value = savedPlayerName;
+            }
+            
+            document.addEventListener('mouseup', handleSelectionEnd);
+            document.addEventListener('touchend', handleSelectionEnd);
+            
+            elements.continueToNameBtn.addEventListener('click', () => {
+                elements.introModal.classList.add('hidden');
+                elements.playerNameModal.classList.remove('hidden');
+            });
+            
+            elements.continueToSetupBtn.addEventListener('click', () => {
+                let name = elements.playerNameInput.value.trim();
+                if (!name) {
+                    name = `Pemain${Math.floor(Math.random() * 900 + 100)}`;
+                }
+                gameState.playerName = name;
+                elements.playerNameDisplay.textContent = name;
+                localStorage.setItem('galuhCiamisPlayerName', name);
+                
+                elements.playerNameModal.classList.add('hidden');
+                elements.setupModal.classList.remove('hidden');
+            });
+            
+            elements.categoryDropdown.addEventListener('change', () => {
+                checkStartButton();
+                const category = elements.categoryDropdown.value;
+                if (category) {
+                    elements.currentCategoryLeaderboard.textContent = category;
+                    setupLeaderboardListener(category);
+                } else {
+                    elements.currentCategoryLeaderboard.textContent = "";
+                    elements.leaderboard.innerHTML = '';
+                }
+            });
+
+            elements.timeSelector.addEventListener('click', (e) => {
+                 if (e.target.classList.contains('time-btn')) {
+                    document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('border-yellow-400'));
+                    e.target.classList.add('border-yellow-400');
+                    checkStartButton();
+                }
+            });
+            
+            elements.leaderboardFilters.addEventListener('click', (e) => {
+                if(e.target.classList.contains('leaderboard-filter-btn')) {
+                    document.querySelectorAll('.leaderboard-filter-btn').forEach(btn => btn.classList.remove('active'));
+                    e.target.classList.add('active');
+                    const category = elements.categoryDropdown.value || (gameState ? gameState.selectedCategory : '');
+                    if(category) {
+                        setupLeaderboardListener(category, e.target.dataset.filter);
+                    }
+                }
+            });
+            
+            elements.startGameBtn.addEventListener('click', startGame);
+            
+            elements.exitSetupBtn.addEventListener('click', () => {
+                elements.setupModal.classList.add('hidden');
+                elements.playerNameModal.classList.remove('hidden');
+            });
+
+            elements.exitNameBtn.addEventListener('click', exitToMainMenu);
+            
+        });
+
+    </script>
+</body>
+</html>
