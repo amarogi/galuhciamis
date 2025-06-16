@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GALUH CIAMIS: Game Aksara Lokal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #111827; }
+        #word-grid { display: grid; grid-template-columns: repeat(12, 1fr); grid-template-rows: repeat(12, 1fr); gap: 1px; background-color: #4b5563; border: 3px solid #4b5563; aspect-ratio: 1 / 1; user-select: none; }
+        .grid-cell { display: flex; justify-content: center; align-items: center; background-color: #d1d5db; font-size: clamp(0.7rem, 2.5vw, 1.1rem); font-weight: 700; color: #1f2937; text-transform: uppercase; cursor: pointer; transition: background-color 0.1s; }
+        .grid-cell.selecting { background-color: #60a5fa; color: white; }
+        .grid-cell.found { background-color: #4ade80; color: white; animation: pop-correct 0.3s ease-out; }
+        .grid-cell.wrong { animation: shake-error 0.4s ease-in-out; }
+        .grid-cell.missed { background-color: #f87171; color: white; border: 1px solid #dc2626; }
+        #word-list li.found { text-decoration: line-through; color: #6b7280; opacity: 0.7; }
+        .leaderboard-name { font-weight: 500; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+        .leaderboard-score { font-weight: 700; color: #60a5fa; }
+        .leaderboard-filter-btn { padding: 4px 8px; border-radius: 6px; transition: background-color 0.2s; background-color: transparent; }
+        .leaderboard-filter-btn.active { background-color: #4f46e5; color: white; }
+        .zap-flash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; opacity: 0; pointer-events: none; animation: zap-animation 0.3s ease-out; }
+        .confetti-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10000; overflow: hidden; }
+        .confetti { position: absolute; width: 10px; height: 10px; background-color: #f00; opacity: 0; animation: confetti-fall 3s ease-in-out forwards; }
+        
+        @keyframes shake-error { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+        @keyframes pop-correct { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        @keyframes zap-animation { 0% { opacity: 0.7; } 100% { opacity: 0; } }
+        @keyframes confetti-fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+    </style>
+</head>
+<body class="text-white flex items-center justify-center min-h-screen p-4">
+
+    <!-- Animation Overlays -->
+    <div id="zap-overlay"></div>
+    <div id="confetti-container" class="confetti-container"></div>
+
+    <!-- Intro Modal -->
+    <div id="intro-modal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-8 max-w-lg w-full text-center">
+            <h2 class="text-3xl font-extrabold text-white mb-2">GALUH CIAMIS</h2>
+            <p class="text-lg text-blue-300 mb-6">Game Aksara Lokal Ungkap Histori – Ciamis</p>
+            <div class="text-left text-gray-300 space-y-3 mb-8">
+                <p><span class="font-bold text-yellow-400">Panduan:</span> Pilih kategori dan waktu, lalu cari 3 kata tersembunyi. Setelah berhasil, Anda naik level dan bisa memilih tantangan baru.</p>
+                <p><span class="font-bold text-red-400">Disklaimer:</span> Game ini adalah sarana edukasi dan hiburan. Data dalam game disederhanakan. Untuk informasi historis yang akurat, rujuklah sumber tepercaya.</p>
+            </div>
+            <button id="continue-to-name-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition text-lg">Mengerti & Lanjutkan</button>
+        </div>
+    </div>
+
+    <!-- Player Name Modal -->
+    <div id="player-name-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-40 p-4">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-8 max-w-sm w-full text-center">
+            <h2 class="text-2xl font-bold text-white mb-4">Masukkan Nama Anda</h2>
+            <p class="text-gray-400 mb-6">Nama ini akan tampil di Papan Peringkat. Jika kosong, nama acak akan diberikan.</p>
+            <input type="text" id="player-name-input" placeholder="Nama Pemain..." maxlength="15" class="w-full bg-gray-700 border border-gray-600 rounded p-3 text-center text-lg mb-6">
+            <div class="grid grid-cols-2 gap-4">
+                <button id="exit-name-btn" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg transition">Keluar</button>
+                <button id="continue-to-mode-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition">Lanjut</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mode Selection Modal -->
+    <div id="mode-selection-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-30 p-4">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-8 max-w-md w-full text-center">
+            <h2 class="text-2xl font-bold text-white mb-6">Pilih Mode Permainan</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button id="solo-mode-btn" class="bg-blue-600 hover:bg-blue-700 p-6 rounded-lg transition transform hover:scale-105">
+                    <span class="text-5xl">👤</span>
+                    <span class="block mt-2 font-bold text-lg">Main Sendiri</span>
+                    <span class="text-xs text-blue-200">Mode Waktu</span>
+                </button>
+                <button id="battle-mode-btn" class="bg-purple-600 hover:bg-purple-700 p-6 rounded-lg transition transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                     <span class="text-5xl">⚔️</span>
+                    <span class="block mt-2 font-bold text-lg">Tantang Pemain</span>
+                     <span class="text-xs text-purple-200">Segera Hadir</span>
+                </button>
+            </div>
+             <button id="exit-mode-btn" class="mt-8 bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">Kembali</button>
+        </div>
+    </div>
+
+    <!-- Setup Modal for Solo Mode -->
+    <div id="setup-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-20 p-4">
+         <div class="bg-gray-800 rounded-lg shadow-xl p-8 max-w-lg w-full">
+            <h2 class="text-2xl font-bold text-center mb-6">Pengaturan Level</h2>
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-center mb-3">Pilih Kategori</h3>
+                <div id="category-selector">
+                    <select id="category-dropdown" class="w-full bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 px-2 rounded-lg transition border-2 border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <option value="">-- Pilih Sebuah Kategori --</option>
+                    </select>
+                </div>
+            </div>
+             <div class="mb-8">
+                <h3 class="text-lg font-semibold text-center mb-3">Pilih Waktu</h3>
+                <div class="grid grid-cols-3 gap-2" id="time-selector">
+                    <button data-time="60" data-multiplier="2.5" class="time-btn bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 px-2 rounded-lg transition border-2 border-transparent">1 Menit</button>
+                    <button data-time="120" data-multiplier="1.5" class="time-btn bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 px-2 rounded-lg transition border-2 border-transparent">2 Menit</button>
+                    <button data-time="180" data-multiplier="1" class="time-btn bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 px-2 rounded-lg transition border-2 border-transparent">3 Menit</button>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <button id="exit-setup-btn" class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-4 rounded-lg transition text-lg">Kembali</button>
+                <button id="start-game-btn" class="w-full bg-red-700 hover:bg-red-800 text-white font-extrabold py-4 rounded-lg transition text-xl disabled:opacity-50" disabled>MULAI LEVEL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Game Layout -->
+    <div class="w-full max-w-6xl mx-auto bg-gray-800 rounded-lg shadow-2xl p-6 grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div class="lg:col-span-1 order-3 lg:order-1 bg-gray-900 p-4 rounded-lg">
+             <div class="mb-4 bg-gray-700 p-2 rounded-lg text-center">
+                 <p class="block text-xs font-medium text-gray-400">Pemain Saat Ini</p>
+                 <p id="player-name-display" class="font-bold text-lg text-yellow-300">-</p>
+            </div>
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="text-xl font-bold">Papan Peringkat</h2>
+                <span id="current-category-leaderboard" class="text-xs text-blue-400"></span>
+            </div>
+            <div id="leaderboard-filters" class="flex justify-around text-xs mb-2 bg-gray-800 rounded-md p-1">
+                <button class="leaderboard-filter-btn active" data-filter="all">Semua</button>
+                <button class="leaderboard-filter-btn" data-filter="daily">Harian</button>
+                <button class="leaderboard-filter-btn" data-filter="weekly">Mingguan</button>
+                <button class="leaderboard-filter-btn" data-filter="monthly">Bulanan</button>
+            </div>
+            <div id="leaderboard" class="space-y-2 text-sm"></div>
+        </div>
+
+        <div class="lg:col-span-2 order-1 lg:order-2">
+            <header class="text-center mb-4">
+                <h1 class="text-3xl font-bold">GALUH CIAMIS</h1>
+                <p class="text-sm text-gray-400">Game Aksara Lokal Ungkap Histori – Ciamis</p>
+                <p id="category-title-display" class="text-lg text-blue-400 font-semibold mt-2"></p>
+            </header>
+            <div id="word-grid" class="mx-auto" style="max-width: 500px;"></div>
+        </div>
+
+        <div class="lg:col-span-1 order-2 lg:order-3 bg-gray-900 p-4 rounded-lg flex flex-col">
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="text-center bg-blue-800 p-2 rounded-lg">
+                    <div class="text-xs text-blue-200">LEVEL</div>
+                    <div id="level-display" class="text-2xl font-extrabold">1</div>
+                </div>
+                <div class="text-center bg-red-800 p-2 rounded-lg">
+                    <div class="text-xs text-red-200">WAKTU</div>
+                    <div id="timer" class="text-2xl font-extrabold">00:00</div>
+                </div>
+            </div>
+            <h2 class="text-xl font-bold mb-3 border-b-2 border-gray-700 pb-2">Cari Kata:</h2>
+            <ul id="word-list" class="space-y-2 text-lg flex-1 overflow-y-auto"></ul>
+            <p id="feedback" class="text-center text-sm my-3 font-medium h-5"></p>
+            <div id="action-buttons" class="space-y-2">
+                 <!-- Dynamically generated buttons will go here -->
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, addDoc, collection, onSnapshot, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        // --- All variables and functions are defined here in the module scope ---
+        
+        const elements = {
+            grid: document.getElementById('word-grid'),
+            wordList: document.getElementById('word-list'),
+            feedback: document.getElementById('feedback'),
+            actionButtons: document.getElementById('action-buttons'),
+            timer: document.getElementById('timer'),
+            introModal: document.getElementById('intro-modal'),
+            playerNameModal: document.getElementById('player-name-modal'),
+            setupModal: document.getElementById('setup-modal'),
+            modeSelectionModal: document.getElementById('mode-selection-modal'),
+            continueToNameBtn: document.getElementById('continue-to-name-btn'),
+            continueToSetupBtn: document.getElementById('continue-to-setup-btn'),
+            categoryTitleDisplay: document.getElementById('category-title-display'),
+            playerNameInput: document.getElementById('player-name-input'),
+            playerNameDisplay: document.getElementById('player-name-display'),
+            leaderboard: document.getElementById('leaderboard'),
+            leaderboardFilters: document.getElementById('leaderboard-filters'),
+            currentCategoryLeaderboard: document.getElementById('current-category-leaderboard'),
+            startGameBtn: document.getElementById('start-game-btn'),
+            exitSetupBtn: document.getElementById('exit-setup-btn'),
+            exitNameBtn: document.getElementById('exit-name-btn'),
+            exitModeBtn: document.getElementById('exit-mode-btn'),
+            soloModeBtn: document.getElementById('solo-mode-btn'),
+            battleModeBtn: document.getElementById('battle-mode-btn'),
+            categoryDropdown: document.getElementById('category-dropdown'),
+            timeSelector: document.getElementById('time-selector'),
+            levelDisplay: document.getElementById('level-display'),
+            zapOverlay: document.getElementById('zap-overlay'),
+            confettiContainer: document.getElementById('confetti-container')
+        };
+        
+        const wordDatabase = {
+            "Nama Tempat": [ {id:"PANJALU",en:"District name"}, {id:"KAWALI",en:"Historic district"}, {id:"RAJADESA",en:"District name"}, {id:"CIJEUNGJING",en:"District name"}, {id:"BANJARSARI",en:"District name"}, {id:"CIMARAGAS",en:"District name"}, {id:"CISAGA",en:"District name"}, {id:"SUKAMANTRI",en:"District name"}, {id:"SINDANGKASIH",en:"District name"}, {id: "CIDOLOG", en: "District name"} ],
+            "Makanan Khas": [ {id:"GALENDO",en:"Coconut fudge"}, {id:"LEUMEUNG",en:"Bamboo rice"}, {id:"OPAK",en:"Cassava cracker"}, {id:"SALE PISANG",en:"Banana snack"}, {id:"RENGGINANG",en:"Rice cracker"}, {id:"NOGA",en:"Nougat candy"}, {id:"DENDENG",en:"Sweet jerky"}, {id:"SATE MARANGGI",en:"A type of satay"}, {id:"MIE GOLOSOR",en:"Slippery noodle"}, {id:"KERIPIK SUKUN",en:"Breadfruit chips"} ],
+            "Tokoh / Sejarah": [ {id:"PANAEKAN",en:"Historic figure"}, {id:"KUSUMADINATA",en:"Regent's name"}, {id:"SASTRAWINATA",en:"Historic figure"}, {id:"HERDIAT",en:"Current regent"}, {id:"KOMARA",en:"Historic figure"}, {id:"ADIPATI",en:"A noble title"}, {id:"IMBANAGARA",en:"Historic name"}, {id:"BOROSNGORA",en:"A historic scholar"}, {id:"JAYANEGARA",en:"A king's name"}, {id:"GALUH",en:"Ancient kingdom"} ],
+            "Tradisi dan Budaya": [ {id:"NYANGKU",en:"A ceremony"}, {id:"MAPAG",en:"A welcoming ritual"}, {id:"NGIKIS",en:"A ritual"}, {id:"RUWATAN",en:"Purification ritual"}, {id:"MULUDAN",en:"Mawlid celebration"}, {id:"NGALUNGSUR",en:"A ritual"}, {id:"SEDEKAH",en:"Alms giving"}, {id:"SUKMA",en:"The soul/spirit"}, {id:"LEMBUR",en:"Hometown/village"}, {id:"WEKASAN",en:"The end/final"} ],
+            "Produk Lokal": [ {id:"GALENDO",en:"Coconut fudge"}
