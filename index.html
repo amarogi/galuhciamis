@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GALUH CIAMIS: Game Aksara Lokal</title>
+    <title>GALUH CIAMIS: Gali & Ungkap Histori Ciamis</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -40,7 +40,7 @@
     <div id="intro-modal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
         <div class="bg-gray-800 rounded-lg shadow-xl p-8 max-w-lg w-full text-center">
             <h2 class="text-3xl font-extrabold text-white mb-2">GALUH CIAMIS</h2>
-            <p class="text-lg text-blue-300 mb-1">Game Aksara Lokal Ungkap Histori – Ciamis</p>
+            <p class="text-lg text-blue-300 mb-1">Gali & Ungkap Histori Ciamis</p>
             <p class="text-xs text-gray-500 mb-6">by marogi</p>
             <p class="text-sm text-gray-400 mb-6 italic">Uji wawasanmu tentang Ciamis dalam game pencarian kata yang seru dan menantang ini!</p>
             
@@ -116,7 +116,7 @@
         <div class="lg:col-span-2 order-1 lg:order-2">
             <header class="text-center mb-4">
                 <h1 class="text-3xl font-bold">GALUH CIAMIS</h1>
-                <p class="text-sm text-gray-400">Game Aksara Lokal Ungkap Histori – Ciamis</p>
+                <p class="text-sm text-gray-400">Gali & Ungkap Histori Ciamis</p>
                 <p class="text-xs text-gray-500 mt-1">by marogi</p>
                 <p id="category-title-display" class="text-lg text-blue-400 font-semibold mt-2"></p>
             </header>
@@ -677,6 +677,7 @@
                 elements.playerNameModal.classList.add('hidden');
                 elements.setupModal.classList.remove('hidden');
             });
+
 
             elements.categoryDropdown.addEventListener('change', () => {
                 checkStartButton();
